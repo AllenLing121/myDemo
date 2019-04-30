@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="UserMapper">
+    <resultMap id="BaseUserMap" type="com.ling.entity.User">
+        <id column="id" property="id" jdbcType="BIGINT" javaType="Long"/>
+        <result column="email" property="email" jdbcType="VARCHAR" javaType="String"/>
+        <result column="user_name" property="userName"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="password" property="password"/>
+        <result column="reg_time" property="regTime"/>
+        <collection property="roles" javaType="com.ling.entity.Role" column="id" autoMapping="true">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+            <collection property="privileges" ofType="com.ling.entity.Privilege" column="id" autoMapping="true">
+                <id column="pid" property="id"/>
+                <result column="pname" property="name"/>
+                <result column="purl" property="url"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="findUserByUserName" resultType="com.ling.entity.User" resultMap="BaseUserMap">
+
+        SELECT u.*,r.id AS rid, r.name AS rname, p.id AS pid, p.rname AS pname, p.url AS purl
+        FROM user u INNER JOIN user_role ur ON u.id=ur.user_id
+        INNER JOIN role r ON r.id=ur.role_id
+        INNER JOIN role_privilege rp ON r.id=rp.role_id
+        INNER JOIN privilege p ON p.id=rp.privilege_id
+    </select>
+</mapper>
