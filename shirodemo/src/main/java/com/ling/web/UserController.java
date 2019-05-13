@@ -20,6 +20,7 @@ public class UserController {
 
         User user = this.userService.findUserByUserName("aa");
         System.out.println("dd");
+        System.out.println("dd");
         return user;
     }
 }

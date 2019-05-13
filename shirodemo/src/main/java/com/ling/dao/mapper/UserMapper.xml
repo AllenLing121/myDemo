@@ -8,10 +8,10 @@
         <result column="nick_name" property="nickName"/>
         <result column="password" property="password"/>
         <result column="reg_time" property="regTime"/>
-        <collection property="roles" javaType="com.ling.entity.Role" column="id" autoMapping="true">
+        <collection property="roles" ofType="com.ling.entity.Role" column="rid">
             <id column="rid" property="id"/>
             <result column="rname" property="name"/>
-            <collection property="privileges" ofType="com.ling.entity.Privilege" column="id" autoMapping="true">
+            <collection property="privileges" ofType="com.ling.entity.Privilege" column="pid">
                 <id column="pid" property="id"/>
                 <result column="pname" property="name"/>
                 <result column="purl" property="url"/>
@@ -20,10 +20,11 @@
     </resultMap>
     <select id="findUserByUserName" resultType="com.ling.entity.User" resultMap="BaseUserMap">
 
-        SELECT u.*,r.id AS rid, r.name AS rname, p.id AS pid, p.rname AS pname, p.url AS purl
+        SELECT u.*,r.id AS rid, r.name AS rname, p.id AS pid, p.name AS pname, p.url AS purl
         FROM user u INNER JOIN user_role ur ON u.id=ur.user_id
         INNER JOIN role r ON r.id=ur.role_id
         INNER JOIN role_privilege rp ON r.id=rp.role_id
         INNER JOIN privilege p ON p.id=rp.privilege_id
+        WHERE u.user_name=#{userName}
     </select>
 </mapper>
